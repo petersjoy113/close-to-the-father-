@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staying Close — Daily Word</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#13213D;
+    --ink-deep:#0D1830;
+    --parchment:#F3E9D2;
+    --parchment-soft:#FBF6EC;
+    --gold:#C9A227;
+    --gold-bright:#E3C158;
+    --oxblood:#7B241C;
+    --charcoal:#2B2118;
+    --line: rgba(201,162,39,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ink);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(201,162,39,0.06), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(123,36,28,0.10), transparent 45%);
+    color:var(--parchment-soft);
+    font-family:'Crimson Text', serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 24px 96px;
+    position:relative;
+  }
+  /* Eyebrow */
+  .eyebrow{
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:var(--gold-bright);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .eyebrow::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+  /* Header */
+  header{ margin-bottom:44px; }
+  .site-title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:1.6rem;
+    color:var(--parchment);
+    letter-spacing:0.02em;
+  }
+  .site-title em{ color:var(--gold-bright); font-style:italic; }
+  .date-line{
+    font-size:0.95rem;
+    color:rgba(243,233,210,0.55);
+    margin-top:4px;
+    font-style:italic;
+  }
+
+  /* Verse of the day */
+  .verse-card{
+    position:relative;
+    padding:8px 0 32px;
+  }
+  .verse-text{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size:clamp(1.6rem, 4.6vw, 2.5rem);
+    line-height:1.35;
+    color:var(--parchment-soft);
+    text-shadow:0 0 30px rgba(201,162,39,0.08);
+  }
+  .verse-text .dropcap{
+    font-size:1.7em;
+    color:var(--gold-bright);
+    font-weight:600;
+    font-style:normal;
+    line-height:0.7;
+    padding-right:2px;
+  }
+  .verse-ref{
+    margin-top:18px;
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.85rem;
+    color:var(--gold);
+  }
+  .verse-ref::before{ content:"— "; }
+
+  .reflection{
+    margin-top:28px;
+    font-size:1.08rem;
+    line-height:1.75;
+    color:rgba(243,233,210,0.82);
+    max-width:62ch;
+  }
+
+  .new-verse-btn{
+    margin-top:26px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--gold-bright);
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    padding:11px 22px;
+    cursor:pointer;
+    transition:all 0.25s ease;
+  }
+  .new-verse-btn:hover, .new-verse-btn:focus-visible{
+    border-color:var(--gold);
+    background:rgba(201,162,39,0.08);
+    outline:none;
+  }
+  .save-btn{
+    margin-top:26px;
+    margin-left:10px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:rgba(243,233,210,0.6);
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    padding:11px 22px;
+    cursor:pointer;
+    transition:all 0.25s ease;
+  }
+  .save-btn.saved{ color:var(--oxblood); border-color:var(--oxblood); background:rgba(123,36,28,0.1); }
+  .save-btn:hover{ outline:none; }
+
+  hr.divider{
+    border:none;
+    height:1px;
+    background:linear-gradient(90deg, var(--line), transparent 70%);
+    margin:48px 0 40px;
+  }
+
+  /* Topics */
+  .section-title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.3rem;
+    font-weight:600;
+    color:var(--parchment);
+    margin-bottom:18px;
+  }
+  .topics{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:48px;
+  }
+  .topic-pill{
+    font-family:'EB Garamond', serif;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    color:rgba(243,233,210,0.8);
+    border:1px solid var(--line);
+    padding:8px 16px;
+    cursor:pointer;
+    background:transparent;
+    transition:all 0.2s ease;
+  }
+  .topic-pill:hover, .topic-pill:focus-visible{
+    border-color:var(--gold);
+    color:var(--gold-bright);
+    outline:none;
+  }
+  .topic-pill.active{
+    background:var(--gold);
+    color:var(--ink-deep);
+    border-color:var(--gold);
+    font-weight:600;
+  }
+
+  /* Topic verse list */
+  .topic-results{ margin-bottom:48px; }
+  .topic-verse{
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .topic-verse:last-child{ border-bottom:none; }
+  .topic-verse p{
+    font-family:'Crimson Text', serif;
+    font-style:italic;
+    font-size:1.1rem;
+    line-height:1.6;
+    color:rgba(243,233,210,0.9);
+  }
+  .topic-verse span{
+    display:block;
+    margin-top:8px;
+    font-family:'EB Garamond', serif;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+
+  /* Ad slots - clearly labeled placeholders */
+  .ad-slot{
+    border:1px dashed rgba(201,162,39,0.35);
+    background:rgba(255,255,255,0.02);
+    color:rgba(243,233,210,0.35);
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.72rem;
+    text-align:center;
+    padding:28px 16px;
+    margin:40px 0;
+  }
+
+  /* Ribbon bookmark - signature element */
+  .ribbon{
+    position:fixed;
+    top:0;
+    right:32px;
+    width:42px;
+    background:var(--oxblood);
+    box-shadow:0 4px 14px rgba(0,0,0,0.35);
+    cursor:pointer;
+    z-index:50;
+    transition:transform 0.2s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+    padding-top:14px;
+    text-align:center;
+  }
+  .ribbon:hover{ transform:translateY(2px); }
+  .ribbon-icon{
+    font-family:'Cormorant Garamond', serif;
+    color:var(--parchment-soft);
+    font-size:1rem;
+    writing-mode:vertical-rl;
+    letter-spacing:0.1em;
+  }
+  .ribbon-count{
+    display:block;
+    color:var(--gold-bright);
+    font-family:'EB Garamond', serif;
+    font-size:0.85rem;
+    margin-top:6px;
+  }
+
+  /* Saved drawer */
+  .drawer-overlay{
+    position:fixed; inset:0;
+    background:rgba(13,24,48,0.7);
+    backdrop-filter:blur(2px);
+    z-index:60;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s ease;
+  }
+  .drawer-overlay.open{ opacity:1; pointer-events:auto; }
+  .drawer{
+    position:fixed;
+    top:0; right:0;
+    height:100%;
+    width:min(420px, 88vw);
+    background:var(--ink-deep);
+    border-left:1px solid var(--line);
+    z-index:61;
+    transform:translateX(100%);
+    transition:transform 0.35s ease;
+    padding:36px 28px;
+    overflow-y:auto;
+  }
+  .drawer.open{ transform:translateX(0); }
+  .drawer-title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.4rem;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+  }
+  .drawer-sub{
+    font-size:0.85rem;
+    color:rgba(243,233,210,0.5);
+    margin-bottom:28px;
+    font-style:italic;
+  }
+  .drawer-close{
+    position:absolute;
+    top:30px; right:28px;
+    background:none;
+    border:none;
+    color:rgba(243,233,210,0.6);
+    font-size:1.3rem;
+    cursor:pointer;
+  }
+  .saved-item{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .saved-item p{
+    font-style:italic;
+    font-size:1rem;
+    line-height:1.55;
+    color:rgba(243,233,210,0.88);
+  }
+  .saved-item span{
+    display:block;
+    margin-top:8px;
+    font-family:'EB Garamond', serif;
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  .empty-state{
+    color:rgba(243,233,210,0.4);
+    font-style:italic;
+    font-size:0.95rem;
+    margin-top:20px;
+  }
+
+  footer{
+    margin-top:60px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-size:0.78rem;
+    color:rgba(243,233,210,0.35);
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.04em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+
+  @media (max-width:520px){
+    .ribbon{ right:16px; width:36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon" id="ribbonTab" tabindex="0" role="button" aria-label="Open saved verses">
+  <span class="ribbon-icon">SAVED</span>
+  <span class="ribbon-count" id="ribbonCount">0</span>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="drawerClose" aria-label="Close">✕</button>
+  <div class="drawer-title">Your Ribbon</div>
+  <div class="drawer-sub">Verses you've marked to return to</div>
+  <div id="savedList"></div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Staying Close</div>
+    <div class="site-title">The <em>Daily</em> Word</div>
+    <div class="date-line" id="dateLine"></div>
+  </header>
+
+  <section class="verse-card">
+    <p class="verse-text" id="verseText"></p>
+    <div class="verse-ref" id="verseRef"></div>
+    <p class="reflection" id="reflectionText"></p>
+    <button class="new-verse-btn" id="newVerseBtn">Another Word</button>
+    <button class="save-btn" id="saveBtn">Mark this verse</button>
+  </section>
+
+  <div class="ad-slot">Ad Space — Responsive Banner</div>
+
+  <hr class="divider">
+
+  <section>
+    <div class="section-title">Browse by what's on your heart</div>
+    <div class="topics" id="topicList"></div>
+    <div class="topic-results" id="topicResults"></div>
+  </section>
+
+  <div class="ad-slot">Ad Space — In-Content Unit</div>
+
+  <footer>
+    Scripture quotations are from the King James Version (public domain). Reflections are original.
+  </footer>
+</div>
+
+<script>
+const VERSES = [
+  {text:"Be still, and know that I am God.", ref:"Psalm 46:10", topics:["peace","anxiety"], reflection:"Stillness isn't the absence of trouble — it's a decision to stop wrestling for control long enough to remember who's holding it. Some days the most faithful thing you can do is simply stop striving."},
+  {text:"I can do all things through Christ which strengtheneth me.", ref:"Philippians 4:13", topics:["strength","encouragement"], reflection:"This isn't a promise that everything will be easy. It's a promise that you won't be carrying it alone. Strength borrowed is still strength."},
+  {text:"For I know the thoughts that I think toward you, saith the Lord, thoughts of peace, and not of evil, to give you an expected end.", ref:"Jeremiah 29:11", topics:["hope","purpose"], reflection:"Even in seasons that feel directionless, there's an intention behind your story that you may not see yet. Hope doesn't require seeing the whole map — just trusting there is one."},
+  {text:"Cast all your care upon him; for he careth for you.", ref:"1 Peter 5:7", topics:["anxiety","peace"], reflection:"Carrying everything yourself isn't strength, it's exhaustion in disguise. Letting go of what was never yours to carry alone is its own kind of obedience."},
+  {text:"The Lord is my shepherd; I shall not want.", ref:"Psalm 23:1", topics:["trust","peace"], reflection:"A shepherd doesn't just lead — he stays close. Wherever you are right now, you are not unwatched and you are not unled."},
+  {text:"Trust in the Lord with all thine heart; and lean not unto thine own understanding.", ref:"Proverbs 3:5", topics:["trust","faith"], reflection:"Understanding everything was never the requirement for trusting God. Some of the deepest faith happens precisely where understanding runs out."},
+  {text:"Love suffereth long, and is kind; love envieth not.", ref:"1 Corinthians 13:4", topics:["love","relationships"], reflection:"Real love is patient before it's anything else. Not the fast, easy kind of love — the kind that stays kind even when staying is hard."},
+  {text:"But they that wait upon the Lord shall renew their strength.", ref:"Isaiah 40:31", topics:["strength","patience"], reflection:"Waiting often feels like wasted time. Scripture calls it renewal. What looks like delay may actually be where your strength is being rebuilt."},
+  {text:"Fear thou not; for I am with thee: be not dismayed; for I am thy God.", ref:"Isaiah 41:10", topics:["fear","strength"], reflection:"Fear rarely listens to logic, but it does listen to presence. You're not being asked to feel fearless — just to remember you're not facing it alone."},
+  {text:"Create in me a clean heart, O God; and renew a right spirit within me.", ref:"Psalm 51:10", topics:["renewal","faith"], reflection:"Starting over isn't weakness, it's invitation. Some days the most spiritual prayer you can pray is simply: begin again in me."},
+  {text:"A friend loveth at all times, and a brother is born for adversity.", ref:"Proverbs 17:17", topics:["relationships","love"], reflection:"Anyone can show up when things are easy. The friendships that matter most reveal themselves in the seasons that aren't."},
+  {text:"And we know that all things work together for good to them that love God.", ref:"Romans 8:28", topics:["hope","purpose"], reflection:"This verse doesn't say all things are good — it says they work together for good. There's a difference, and it matters most on the hard days."},
+  {text:"The Lord is my light and my salvation; whom shall I fear?", ref:"Psalm 27:1", topics:["fear","trust"], reflection:"Fear loses its grip the moment you remember where the light is actually coming from. Darkness only feels permanent when you forget who holds the lamp."},
+  {text:"Be not anxious for anything; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.", ref:"Philippians 4:6", topics:["anxiety","faith"], reflection:"Worry and prayer can't really occupy the same space for long. One asks you to hold the weight; the other asks you to hand it over."},
+  {text:"Blessed are the pure in heart: for they shall see God.", ref:"Matthew 5:8", topics:["faith","purpose"], reflection:"Purity here isn't perfection — it's undivided attention. A heart that isn't split between competing loyalties sees more clearly."},
+  {text:"He healeth the broken in heart, and bindeth up their wounds.", ref:"Psalm 147:3", topics:["healing","hope"], reflection:"Healing in scripture is rarely instant, but it's never indifferent. Every wound you carry has already been seen, named, and is being tended to."},
+  {text:"Ye are the light of the world. A city that is set on an hill cannot be hid.", ref:"Matthew 5:14", topics:["purpose","encouragement"], reflection:"You weren't made to dim yourself for other people's comfort. Whatever light you carry was given to be visible, not hidden."},
+  {text:"Commit thy way unto the Lord; trust also in him; and he shall bring it to pass.", ref:"Psalm 37:5", topics:["trust","purpose"], reflection:"Committing a plan to God doesn't mean abandoning it — it means releasing your grip on exactly how it has to unfold."},
+  {text:"Rejoice in the Lord alway: and again I say, Rejoice.", ref:"Philippians 4:4", topics:["joy","encouragement"], reflection:"Joy here isn't dependent on circumstance — Paul wrote this from prison. It's an act of will rooted in something steadier than your day."},
+  {text:"The joy of the Lord is your strength.", ref:"Nehemiah 8:10", topics:["joy","strength"], reflection:"Joy isn't a reward for having it together. It's often the very thing that holds you together when you don't."},
+  {text:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.", ref:"Isaiah 26:3", topics:["peace","trust"], reflection:"Peace tends to follow attention. Where your mind keeps returning to in the quiet moments says a lot about what's really anchoring you."},
+  {text:"Casting down imaginations, and every high thing that exalteth itself against the knowledge of God, and bringing into captivity every thought to the obedience of Christ.", ref:"2 Corinthians 10:5", topics:["faith","strength"], reflection:"Not every thought that enters your mind deserves a seat at the table. Some are visitors to be examined, not residents to be trusted."},
+  {text:"Delight thyself also in the Lord: and he shall give thee the desires of thine heart.", ref:"Psalm 37:4", topics:["joy","purpose"], reflection:"This isn't a transaction — it's a reshaping. The longer you delight in God, the more your own desires start to look like His."},
+  {text:"Let not your heart be troubled: ye believe in God, believe also in me.", ref:"John 14:1", topics:["peace","faith"], reflection:"A troubled heart and a believing heart can exist in the same chest. Belief isn't the absence of trouble — it's what steadies you inside it."},
+  {text:"But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.", ref:"Matthew 6:33", topics:["purpose","trust"], reflection:"So much anxiety comes from chasing the wrong thing first. Order matters more than effort — seek rightly, and the rest tends to follow."},
+  {text:"Honour thy father and thy mother: that thy days may be long upon the land.", ref:"Exodus 20:12", topics:["relationships","family"], reflection:"Honor isn't the same as agreement. You can hold a parent in honor even through seasons of disagreement or distance."},
+  {text:"Children, obey your parents in the Lord: for this is right.", ref:"Ephesians 6:1", topics:["family","relationships"], reflection:"Obedience in a healthy home is meant to be a season, not a life sentence — training that prepares you to one day choose well on your own."},
+  {text:"As iron sharpeneth iron; so a man sharpeneth the countenance of his friend.", ref:"Proverbs 27:17", topics:["relationships","encouragement"], reflection:"The right friendships don't just comfort you — they refine you. Some of your growth has come from people willing to push back, not just agree."},
+  {text:"Husbands, love your wives, even as Christ also loved the church, and gave himself for it.", ref:"Ephesians 5:25", topics:["love","relationships"], reflection:"This is a high bar on purpose — sacrificial, not transactional. Love measured by what you're willing to give up, not what you get back."},
+  {text:"Charity suffereth long, and is kind; charity envieth not, charity vaunteth not itself, is not puffed up.", ref:"1 Corinthians 13:4", topics:["love","relationships"], reflection:"Love described this way is almost entirely about restraint — what it refuses to do — more than what it performs."},
+  {text:"Forbearing one another, and forgiving one another, if any man have a quarrel against any.", ref:"Colossians 3:13", topics:["relationships","forgiveness"], reflection:"Forbearing comes before forgiving in this verse — sometimes the first faithful step isn't full resolution, it's simply not walking away."},
+  {text:"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", ref:"John 3:16", topics:["love","faith"], reflection:"The most quoted verse in scripture is still worth slowing down for. Love, here, isn't a feeling — it's a costly, deliberate gift."},
+  {text:"If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", ref:"1 John 1:9", topics:["forgiveness","renewal"], reflection:"Confession isn't about earning forgiveness — it's about finally agreeing with what's true, which is the doorway forgiveness was already waiting behind."},
+  {text:"Be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.", ref:"Ephesians 4:32", topics:["forgiveness","love"], reflection:"The standard for forgiving others is set by how you've already been forgiven — not by how deserving the other person seems."},
+  {text:"Vengeance is mine; I will repay, saith the Lord.", ref:"Romans 12:19", topics:["forgiveness","trust"], reflection:"Letting go of the need to settle a score isn't weakness — it's handing the matter to someone whose judgment is actually trustworthy."},
+  {text:"Wait on the Lord: be of good courage, and he shall strengthen thine heart: wait, I say, on the Lord.", ref:"Psalm 27:14", topics:["patience","strength"], reflection:"Notice the repetition — wait, then wait again. Some seasons require more patience than a single instruction can hold."},
+  {text:"Let us not be weary in well doing: for in due season we shall reap, if we faint not.", ref:"Galatians 6:9", topics:["patience","encouragement"], reflection:"Due season isn't your season — it's God's timing layered over your effort. Fatigue is real, but it isn't permission to quit just before the harvest."},
+  {text:"Now faith is the substance of things hoped for, the evidence of things not seen.", ref:"Hebrews 11:1", topics:["faith","hope"], reflection:"Faith is described here almost like proof — not blind guessing, but a confidence so settled it functions like evidence."},
+  {text:"For we walk by faith, not by sight.", ref:"2 Corinthians 5:7", topics:["faith","trust"], reflection:"Sight wants guarantees before it moves. Faith moves first and lets understanding catch up later — which is often the harder, truer way to walk."},
+  {text:"I have set the Lord always before me: because he is at my right hand, I shall not be moved.", ref:"Psalm 16:8", topics:["trust","strength"], reflection:"Stability here isn't about an unshakable circumstance — it's about an unshakable focus. What's set before you determines what can move you."},
+  {text:"Hope deferred maketh the heart sick: but when the desire cometh, it is a tree of life.", ref:"Proverbs 13:12", topics:["hope","patience"], reflection:"Scripture doesn't pretend delayed hope doesn't hurt. It names the sickness honestly, while still pointing toward the life waiting on the other side."},
+  {text:"Weeping may endure for a night, but joy cometh in the morning.", ref:"Psalm 30:5", topics:["hope","healing"], reflection:"Grief is given its night — not denied, not rushed. But the verse insists the night has an edge, and morning is still coming."},
+  {text:"For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers... shall be able to separate us from the love of God.", ref:"Romans 8:38-39", topics:["love","hope"], reflection:"This list is exhaustive on purpose — Paul is closing every exit. There is no circumstance built that can out-power this kind of love."},
+  {text:"Finally, brethren, whatsoever things are true, whatsoever things are honest... think on these things.", ref:"Philippians 4:8", topics:["peace","renewal"], reflection:"What you rehearse in your mind shapes what you become. This verse is less about positivity and more about disciplined attention."},
+  {text:"Be strong and of a good courage, fear not, nor be afraid of them: for the Lord thy God, he it is that doth go with thee.", ref:"Deuteronomy 31:6", topics:["strength","fear"], reflection:"Courage in scripture is rarely commanded alone — it's almost always paired with a promise of presence. You're not told to be brave in isolation."},
+  {text:"The name of the Lord is a strong tower: the righteous runneth into it, and is safe.", ref:"Proverbs 18:10", topics:["strength","trust"], reflection:"A tower implies you have to actually run to it — safety here isn't passive. It's available, but it still asks something of you."},
+  {text:"My grace is sufficient for thee: for my strength is made perfect in weakness.", ref:"2 Corinthians 12:9", topics:["strength","healing"], reflection:"This is one of scripture's strangest comforts — that weakness isn't a problem to fix before grace shows up, it's the very place grace works best."},
+  {text:"Draw nigh to God, and he will draw nigh to you.", ref:"James 4:8", topics:["faith","renewal"], reflection:"Closeness here works both ways but starts with you. Distance from God is rarely sudden — it's usually a slow drift that a single step can begin to close."},
+  {text:"Search me, O God, and know my heart: try me, and know my thoughts.", ref:"Psalm 139:23", topics:["renewal","faith"], reflection:"This is a brave prayer — inviting examination rather than avoiding it. Real renewal usually starts with letting yourself be truly seen."},
+  {text:"Old things are passed away; behold, all things are become new.", ref:"2 Corinthians 5:17", topics:["renewal","hope"], reflection:"This isn't a slow renovation — it's a new identity. Whatever defined you before doesn't get the final word anymore."},
+  {text:"My times are in thy hand.", ref:"Psalm 31:15", topics:["trust","purpose"], reflection:"Five words that cover everything — the delays, the timing you don't understand, the waiting that feels wasted. None of it is unaccounted for."},
+];
+
+const TOPICS = ["peace","strength","hope","trust","love","fear","anxiety","faith","purpose","renewal","relationships","patience","encouragement","joy","healing","forgiveness","family"];
+
+let saved = [];
+let activeTopic = null;
+let currentVerseIndex = null;
+
+function fmtDate(){
+  const d = new Date();
+  return d.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+}
+
+function pickVerseOfDay(){
+  // deterministic-ish daily pick based on date, falls back to random if reshuffled
+  const day = new Date().getDate();
+  return day % VERSES.length;
+}
+
+function renderVerse(idx){
+  currentVerseIndex = idx;
+  const v = VERSES[idx];
+  const first = v.text.charAt(0);
+  const rest = v.text.slice(1);
+  document.getElementById('verseText').innerHTML = `<span class="dropcap">${first}</span>${rest}`;
+  document.getElementById('verseRef').textContent = v.ref;
+  document.getElementById('reflectionText').textContent = v.reflection;
+  updateSaveBtn();
+}
+
+function updateSaveBtn(){
+  const btn = document.getElementById('saveBtn');
+  const isSaved = saved.some(s => s.ref === VERSES[currentVerseIndex].ref);
+  btn.textContent = isSaved ? "Marked ✓" : "Mark this verse";
+  btn.classList.toggle('saved', isSaved);
+}
+
+function renderTopics(){
+  const list = document.getElementById('topicList');
+  list.innerHTML = '';
+  TOPICS.forEach(t => {
+    const pill = document.createElement('button');
+    pill.className = 'topic-pill' + (activeTopic === t ? ' active' : '');
+    pill.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+    pill.addEventListener('click', () => {
+      activeTopic = (activeTopic === t) ? null : t;
+      renderTopics();
+      renderTopicResults();
+    });
+    list.appendChild(pill);
+  });
+}
+
+function renderTopicResults(){
+  const container = document.getElementById('topicResults');
+  container.innerHTML = '';
+  if(!activeTopic) return;
+  const matches = VERSES.filter(v => v.topics.includes(activeTopic));
+  matches.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'topic-verse';
+    div.innerHTML = `<p>"${v.text}"</p><span>${v.ref}</span>`;
+    container.appendChild(div);
+  });
+}
+
+function renderSavedDrawer(){
+  const list = document.getElementById('savedList');
+  const count = document.getElementById('ribbonCount');
+  count.textContent = saved.length;
+  list.innerHTML = '';
+  if(saved.length === 0){
+    list.innerHTML = '<div class="empty-state">Nothing marked yet. Tap "Mark this verse" on any word that speaks to you.</div>';
+    return;
+  }
+  saved.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'saved-item';
+    div.innerHTML = `<p>"${v.text}"</p><span>${v.ref}</span>`;
+    list.appendChild(div);
+  });
+}
+
+// Events
+document.getElementById('newVerseBtn').addEventListener('click', () => {
+  let idx;
+  do { idx = Math.floor(Math.random() * VERSES.length); } while(idx === currentVerseIndex && VERSES.length > 1);
+  renderVerse(idx);
+});
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const v = VERSES[currentVerseIndex];
+  const exists = saved.some(s => s.ref === v.ref);
+  if(exists){
+    saved = saved.filter(s => s.ref !== v.ref);
+  } else {
+    saved.push(v);
+  }
+  updateSaveBtn();
+  renderSavedDrawer();
+});
+
+const ribbonTab = document.getElementById('ribbonTab');
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('drawerOverlay');
+const closeDrawer = document.getElementById('drawerClose');
+
+function openDrawer(){
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  drawer.setAttribute('aria-hidden','false');
+}
+function closeDrawerFn(){
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  drawer.setAttribute('aria-hidden','true');
+}
+ribbonTab.addEventListener('click', openDrawer);
+ribbonTab.addEventListener('keypress', (e) => { if(e.key === 'Enter') openDrawer(); });
+overlay.addEventListener('click', closeDrawerFn);
+closeDrawer.addEventListener('click', closeDrawerFn);
+
+// Init
+document.getElementById('dateLine').textContent = fmtDate();
+renderVerse(pickVerseOfDay());
+renderTopics();
+renderSavedDrawer();
+</script>
+
+</body>
+</html>
